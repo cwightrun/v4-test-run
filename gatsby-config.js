@@ -2,6 +2,9 @@ require("dotenv").config({
   path: `.env`,
 });
 
+const resolveConfig = require("tailwindcss/resolveConfig");
+const tailwindConfig = require("./tailwind.config.js");
+
 module.exports = {
   siteMetadata: {
     title: `Gatsby Default Starter`,
@@ -9,6 +12,12 @@ module.exports = {
     author: `@gatsbyjs`,
   },
   plugins: [
+    {
+        resolve: 'gatsby-plugin-postcss',
+        options: {
+            postCssPlugins: [require('tailwindcss')('./tailwind.config.js')],
+        },
+    },
     `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-source-filesystem`,
@@ -17,8 +26,14 @@ module.exports = {
         path: `${__dirname}/src/images`,
       },
     },
-    `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
+    {
+      resolve: `gatsby-plugin-sass`,
+      options: {
+        // Configure SASS to process Tailwind
+        postCssPlugins: [require('tailwindcss')],
+      },
+    },
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
@@ -39,7 +54,8 @@ module.exports = {
         accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
         environment: process.env.CONTENTFUL_ENV
       },
-    }
+    },
+    `gatsby-transformer-sharp`
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
